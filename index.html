@@ -522,11 +522,13 @@
             setTimeout(() => t.classList.remove("on"), 2400);
         }
 
-        window.loginWithGoogle = () => {
+        window.loginWithGoogle = async () => {
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const errDiv = document.getElementById("auth-error");
+            if (errDiv) errDiv.style.display = "none";
             
             const handleAuthError = (error) => {
-                const errDiv = document.getElementById("auth-error");
+                if (!errDiv) return;
                 errDiv.style.display = "block";
                 const currentDomain = window.location.hostname;
                 if (error.code === 'auth/unauthorized-domain' || error.message.includes('unauthorized-domain')) {
@@ -539,17 +541,39 @@
                 }
             };
 
-            if (isMobile) {
-                signInWithRedirect(auth, provider).catch(handleAuthError);
-            } else {
-                signInWithPopup(auth, provider).catch(handleAuthError);
+            try {
+                if (isMobile) {
+                    await signInWithRedirect(auth, provider);
+                } else {
+                    await signInWithPopup(auth, provider);
+                }
+            } catch (error) {
+                handleAuthError(error);
             }
         };
 
         window.confirmLogout = () => document.getElementById("logoutModal").classList.add("on");
         window.closeLogoutModal = () => document.getElementById("logoutModal").classList.remove("on");
 
-        // Removed duplicate 'currentUser' & 'repMode' declarations that caused the SyntaxError
+        window.logoutUser = () => {
+            closeLogoutModal();
+            const logoutOverlay = document.getElementById("logout-overlay");
+            if (logoutOverlay) logoutOverlay.classList.add("on");
+            
+            // Clear local user cache on logout
+            if (currentUser) {
+                localStorage.removeItem(`cache_data_${currentUser.uid}`);
+            }
+            
+            signOut(auth).then(() => {
+                if (logoutOverlay) logoutOverlay.classList.remove("on");
+                // Hard reset memory state to guarantee fresh Google Sign-in trigger
+                window.location.reload();
+            }).catch(err => {
+                if (logoutOverlay) logoutOverlay.classList.remove("on");
+                console.error("Sign-out error:", err);
+            });
+        };
 
         function getCurr() {
             return S.currency || 'AED';
