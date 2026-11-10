@@ -587,7 +587,7 @@
             const logoutOverlay = document.getElementById("logout-overlay");
             logoutOverlay.classList.add("on");
 
-            // Non-blocking background sign out
+            // Instantly trigger Firebase signOut asynchronously
             signOut(auth).catch(err => console.error("Signout error:", err));
 
             try {
@@ -595,12 +595,10 @@
                 sessionStorage.clear();
             } catch(e) {}
 
-            // Instant 300ms transition to logged-out state
-            setTimeout(() => {
-                logoutOverlay.classList.remove("on");
-                document.getElementById("logged-in-view").style.display = "none";
-                document.getElementById("logged-out-wrapper").style.display = "block";
-            }, 300);
+            // Instantly dismiss overlay and show login view without any delay
+            logoutOverlay.classList.remove("on");
+            document.getElementById("logged-in-view").style.display = "none";
+            document.getElementById("logged-out-wrapper").style.display = "block";
         };
 
         async function loadCloudData(uid) {
