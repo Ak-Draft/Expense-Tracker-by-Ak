@@ -300,8 +300,34 @@
             <div style="font-size: 3.2rem; margin-bottom: 14px;">💳</div>
             <h1 style="font-size: 1.6rem; margin-bottom: 6px;">Expense Tracker Pro</h1>
             <p class="mute">Keep track of cards, daily expenses, and group settlements effortlessly.</p>
+
+            <!-- Toggle Tabs for Login / Sign Up -->
+            <div class="chips" style="justify-content: center; margin: 18px 0 10px;">
+                <button class="chip on" id="tab-login" onclick="switchAuthTab('login')">Log In</button>
+                <button class="chip" id="tab-signup" onclick="switchAuthTab('signup')">Sign Up</button>
+            </div>
+
+            <!-- Email/Password Form -->
+            <form id="auth-form" onsubmit="handleEmailAuth(event)" style="text-align: left;">
+                <div id="name-field-wrap" style="display: none;">
+                    <label for="auth-name">Full Name</label>
+                    <input id="auth-name" type="text" placeholder="John Doe">
+                </div>
+                <label for="auth-email">Email Address</label>
+                <input id="auth-email" type="email" placeholder="name@example.com" required>
+                <label for="auth-pass">Password</label>
+                <input id="auth-pass" type="password" placeholder="••••••••" required minlength="6">
+
+                <button class="full" id="btn-email-auth" type="submit" style="margin-top: 14px;">Log In with Email</button>
+            </form>
+
+            <div style="display: flex; align-items: center; gap: 10px; margin: 18px 0 8px;">
+                <div style="flex: 1; height: 1px; background: var(--line);"></div>
+                <span class="mute" style="font-size: 0.8rem;">OR</span>
+                <div style="flex: 1; height: 1px; background: var(--line);"></div>
+            </div>
             
-            <button class="btn-google" id="btn-google-login" onclick="loginWithGoogle()">
+            <button class="btn-google" id="btn-google-login" type="button" onclick="loginWithGoogle()">
                 <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.19v3.15C3.17 21.31 7.23 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.39-1.49-.39-2.24s.14-1.52.39-2.24V6.6H1.19C.43 8.13 0 9.87 0 11.7s.43 3.57 1.19 5.1l4.08-2.56z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.17 2.69 1.19 6.6l4.08 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
                 <span id="login-btn-text">Sign in with Google</span>
             </button>
@@ -327,30 +353,6 @@
         <div class="welcome-spinner" style="border-top-color: #ef4444;"></div>
         <div style="font-size: 1.2rem; font-weight: 600;">Logging you out...</div>
         <div style="color: var(--mute); font-size: 0.9rem; margin-top: 6px;">Clearing session & securing your data 🔒</div>
-    </div>
-
-    <!-- FIRST-TIME CURRENCY SETUP MODAL -->
-    <div class="modal-overlay" id="currencyModal">
-        <div class="modal-card">
-            <div style="font-size: 2.5rem; margin-bottom: 8px;">🌍</div>
-            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 6px;">Welcome to Expense Tracker!</h3>
-            <p class="mute" style="margin-bottom: 16px;">Please choose your preferred currency to get started.</p>
-            
-            <label for="currencySelect" style="text-align: left; margin-bottom: 6px;">Primary Currency</label>
-            <select id="currencySelect" style="margin-bottom: 20px;">
-                <option value="AED">AED (Dh - United Arab Emirates Dirham)</option>
-                <option value="USD">USD ($ - US Dollar)</option>
-                <option value="EUR">EUR (€ - Euro)</option>
-                <option value="GBP">GBP (£ - British Pound)</option>
-                <option value="INR">INR (₹ - Indian Rupee)</option>
-                <option value="SAR">SAR (SR - Saudi Riyal)</option>
-                <option value="QAR">QAR (QR - Qatari Riyal)</option>
-                <option value="CAD">CAD ($ - Canadian Dollar)</option>
-                <option value="AUD">AUD ($ - Australian Dollar)</option>
-            </select>
-            
-            <button class="full" id="saveCurrencyBtn" style="margin-top: 0;">Continue to Dashboard 🚀</button>
-        </div>
     </div>
 
     <!-- LOGGED IN VIEW -->
@@ -379,7 +381,7 @@
                     <summary style="cursor:pointer; font-weight:600; color:var(--acc);">+ Add New Card</summary>
                     <div style="margin-top:10px;">
                         <label for="cn">Card Name</label><input id="cn" placeholder="e.g. Visa Salary">
-                        <label for="cb">Starting Balance (<span class="curr-label">AED</span>)</label><input id="cb" type="number" step="0.01" placeholder="0.00">
+                        <label for="cb">Starting Balance (AED)</label><input id="cb" type="number" step="0.01" placeholder="0.00">
                         <button class="full" id="addCard">Save Card</button>
                     </div>
                 </details>
@@ -392,7 +394,7 @@
         <section id="v-add" class="view">
             <div class="box">
                 <div class="two">
-                    <div><label for="ea">Amount (<span class="curr-label">AED</span>)</label><input id="ea" type="number" step="0.01" placeholder="0.00"></div>
+                    <div><label for="ea">Amount (AED)</label><input id="ea" type="number" step="0.01" placeholder="0.00"></div>
                     <div><label for="ed">Date</label><input id="ed" type="date"></div>
                 </div>
                 <label>Category</label><div class="chips" id="catChips"></div>
@@ -457,7 +459,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -473,20 +475,186 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        
-        // Configure Provider & Force Account Selector Every Login
+
+        let currentUser = null;
+        let authMode = 'login'; // 'login' or 'signup'
+
+        window.switchAuthTab = (mode) => {
+            authMode = mode;
+            const loginTab = document.getElementById("tab-login");
+            const signupTab = document.getElementById("tab-signup");
+            const nameWrap = document.getElementById("name-field-wrap");
+            const btnAuth = document.getElementById("btn-email-auth");
+            const nameInput = document.getElementById("auth-name");
+
+            if (mode === 'signup') {
+                loginTab.classList.remove("on");
+                signupTab.classList.add("on");
+                nameWrap.style.display = "block";
+                nameInput.required = true;
+                btnAuth.innerText = "Create Account";
+            } else {
+                signupTab.classList.remove("on");
+                loginTab.classList.add("on");
+                nameWrap.style.display = "none";
+                nameInput.required = false;
+                btnAuth.innerText = "Log In with Email";
+            }
+        };
+
+        window.handleEmailAuth = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("auth-email").value.trim();
+            const password = document.getElementById("auth-pass").value;
+            const name = document.getElementById("auth-name").value.trim();
+            const btnAuth = document.getElementById("btn-email-auth");
+            const errDiv = document.getElementById("auth-error");
+
+            if (errDiv) errDiv.style.display = "none";
+            btnAuth.disabled = true;
+            btnAuth.style.opacity = "0.7";
+
+            try {
+                if (authMode === 'signup') {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    if (name) {
+                        await updateProfile(userCredential.user, { displayName: name });
+                    }
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+            } catch (error) {
+                btnAuth.disabled = false;
+                btnAuth.style.opacity = "1";
+                if (errDiv) {
+                    errDiv.style.display = "block";
+                    let msg = error.message;
+                    if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                        msg = "Invalid email or password. Please try again.";
+                    } else if (error.code === 'auth/email-already-in-use') {
+                        msg = "An account with this email already exists.";
+                    } else if (error.code === 'auth/weak-password') {
+                        msg = "Password should be at least 6 characters long.";
+                    }
+                    errDiv.innerHTML = `<strong>Authentication Error:</strong> ${msg}`;
+                }
+            }
+        };
+
         const provider = new GoogleAuthProvider();
         provider.setCustomParameters({
             prompt: 'select_account'
         });
 
-        // Process redirect auth result if returning from Google redirect
-        getRedirectResult(auth).catch((error) => {
-            console.error("Redirect Sign-in error:", error);
+        window.loginWithGoogle = async () => {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            try {
+                if (isMobile) {
+                    await signInWithRedirect(auth, provider);
+                } else {
+                    await signInWithPopup(auth, provider);
+                }
+            } catch (error) {
+                const errDiv = document.getElementById("auth-error");
+                if (errDiv) {
+                    errDiv.style.display = "block";
+                    const currentDomain = window.location.hostname;
+                    if (error.code === 'auth/unauthorized-domain' || error.message.includes('unauthorized-domain')) {
+                        errDiv.innerHTML = `
+                            <strong>⚠️ Domain Not Authorized in Firebase</strong><br>
+                            Add <code style="color:var(--acc);">${currentDomain}</code> to Firebase Console under Authentication > Settings > Authorized Domains.
+                        `;
+                    } else {
+                        errDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+                    }
+                }
+            }
+        };
+
+        window.confirmLogout = () => document.getElementById("logoutModal").classList.add("on");
+        window.closeLogoutModal = () => document.getElementById("logoutModal").classList.remove("on");
+
+        window.logoutUser = async () => {
+            closeLogoutModal();
+            const logoutOverlay = document.getElementById("logout-overlay");
+            logoutOverlay.classList.add("on");
+            try {
+                localStorage.clear();
+                sessionStorage.clear();
+                await signOut(auth);
+            } catch (e) {
+                logoutOverlay.classList.remove("on");
+            }
+        };
+
+        async function loadCloudData(uid) {
+            const cachedData = localStorage.getItem(`cache_data_${uid}`);
+            if (cachedData) {
+                try { S = JSON.parse(cachedData); render(); } catch(e) {}
+            }
+            try {
+                const docRef = doc(db, "users", uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    S = docSnap.data();
+                    localStorage.setItem(`cache_data_${uid}`, JSON.stringify(S));
+                } else {
+                    S = { cards: [{ id: 'c1', name: 'Visa', bal: 2000 }], exp: [] };
+                    await setDoc(docRef, S);
+                }
+            } catch (e) {}
+            render();
+        }
+
+        async function saveCloudData() {
+            if (!currentUser) return;
+            localStorage.setItem(`cache_data_${currentUser.uid}`, JSON.stringify(S));
+            try { await setDoc(doc(db, "users", currentUser.uid), S); } catch (e) {}
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            const loggedOutView = document.getElementById("logged-out-wrapper");
+            const loggedInView = document.getElementById("logged-in-view");
+            const welcomeOverlay = document.getElementById("welcome-overlay");
+
+            if (user) {
+                currentUser = user;
+                const displayName = user.displayName || user.email.split('@')[0];
+                document.getElementById("user-name").innerText = displayName.split(' ')[0];
+                document.getElementById("welcome-user").innerText = `Welcome back, ${displayName}! 👋`;
+                loggedOutView.style.display = "none";
+                welcomeOverlay.classList.add("on");
+
+                const forceHideTimer = setTimeout(() => {
+                    welcomeOverlay.classList.remove("on");
+                    loggedInView.style.display = "block";
+                }, 1500);
+
+                loadCloudData(user.uid).then(() => {
+                    clearTimeout(forceHideTimer);
+                    setTimeout(() => {
+                        welcomeOverlay.classList.remove("on");
+                        loggedInView.style.display = "block";
+                    }, 250);
+                });
+            } else {
+                currentUser = null;
+                loggedOutView.style.display = "block";
+                loggedInView.style.display = "none";
+            }
         });
 
+        const CATS = [
+            { id: 'food', n: '🍔 Food' }, { id: 'groc', n: '🛒 Groceries' },
+            { id: 'trans', n: '🚗 Transport' }, { id: 'bills', n: '💡 Bills' },
+            { id: 'shop', n: '🛍️ Shopping' }, { id: 'hlth', n: '🏥 Health' },
+            { id: 'fun', n: '🎮 Fun' }, { id: 'rent', n: '🏠 Rent' },
+            { id: 'oth', n: '📦 Other' }
+        ];
+
         let S = { cards: [], exp: [] };
-        let currentUser = null;
+        let selCat = 'food';
+        let selWho = 'me';
         let repMode = 'day';
 
         const themeSelect = document.getElementById("themeSelectDropdown");
@@ -527,75 +695,340 @@
             setTimeout(() => t.classList.remove("on"), 2400);
         }
 
-        const handleGoogleLogin = async () => {
-            console.log("Google login button clicked!");
-            const btn = document.getElementById("btn-google-login");
-            const btnText = document.getElementById("login-btn-text");
-            if (btnText) btnText.innerText = "Connecting to Google...";
-            if (btn) btn.style.opacity = "0.7";
+        function render() {
+            renderCardsAndPeople();
+            renderExpenseForm();
+            renderReports();
+        }
 
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            const errDiv = document.getElementById("auth-error");
-            if (errDiv) errDiv.style.display = "none";
-            
-            const handleAuthError = (error) => {
-                if (btnText) btnText.innerText = "Sign in with Google";
-                if (btn) btn.style.opacity = "1";
-                if (!errDiv) return;
-                errDiv.style.display = "block";
-                console.error("Auth error:", error);
-                const currentDomain = window.location.hostname;
-                if (error.code === 'auth/unauthorized-domain' || error.message.includes('unauthorized-domain')) {
-                    errDiv.innerHTML = `
-                        <strong>⚠️ Domain Not Authorized in Firebase</strong><br>
-                        Add <code style="color:var(--acc);">${currentDomain}</code> to Firebase Console under Authentication > Settings > Authorized Domains.
+        function renderCardsAndPeople() {
+            const cList = document.getElementById("cardList");
+            cList.innerHTML = "";
+            let totalBal = 0;
+
+            S.cards.forEach(c => {
+                totalBal += c.bal;
+                const cardDiv = document.createElement("div");
+                cardDiv.className = "card-item-box card-anim";
+                cardDiv.innerHTML = `
+                    <div class="card-item-header">
+                        <span style="font-weight:600;">💳 ${c.name}</span>
+                        <span style="font-weight:700; color:var(--acc);">${c.bal.toFixed(2)} AED</span>
+                    </div>
+                    <div class="card-item-actions">
+                        <input type="number" step="0.01" class="add-amount-input" placeholder="Add amount" id="add-val-${c.id}">
+                        <button style="padding: 8px 16px;" onclick="addCardAmount('${c.id}')">Add</button>
+                        <button class="ghost" style="color:#ef4444;" onclick="deleteCard('${c.id}')">Delete</button>
+                    </div>
+                `;
+                cList.appendChild(cardDiv);
+            });
+
+            document.getElementById("total").innerText = totalBal.toFixed(2) + " AED";
+
+            const peopleDebts = {};
+            let pTot = 0;
+
+            S.exp.filter(e => e.who !== 'me' && e.name && !e.settled).forEach(e => {
+                pTot += e.amt;
+                if (!peopleDebts[e.name]) peopleDebts[e.name] = [];
+                peopleDebts[e.name].push(e);
+            });
+
+            const pList = document.getElementById("plist");
+            pList.innerHTML = "";
+            const personNames = Object.keys(peopleDebts);
+
+            if (personNames.length === 0) {
+                pList.innerHTML = `<div class="empty">Nobody owes you money right now. 🎉</div>`;
+            } else {
+                personNames.forEach(person => {
+                    const exps = peopleDebts[person];
+                    const personTotal = exps.reduce((sum, item) => sum + item.amt, 0);
+                    const personBox = document.createElement("div");
+                    personBox.className = "card-item-box card-anim";
+                    
+                    let itemsHTML = "";
+                    exps.forEach(item => {
+                        const cardObj = S.cards.find(c => c.id === item.cid);
+                        const cardName = cardObj ? cardObj.name : 'Unknown Card';
+                        itemsHTML += `
+                            <div style="display:flex; align-items:center; justify-content:space-between; padding: 6px 0; border-top: 1px dashed var(--line); margin-top:6px; font-size:0.85rem;">
+                                <div>
+                                    <span style="font-weight:600; color:var(--ink);">${item.amt.toFixed(2)} AED</span>
+                                    <span class="mute"> paid via 💳 <strong>${cardName}</strong> (${item.dt})</span>
+                                </div>
+                                <button style="padding: 4px 10px; font-size:0.75rem; min-height: 30px;" onclick="settleDebt('${item.id}')">Settled</button>
+                            </div>
+                        `;
+                    });
+
+                    personBox.innerHTML = `
+                        <div class="row" style="margin-bottom: 4px;">
+                            <span style="font-weight: 700;">👤 ${person}</span>
+                            <span style="font-weight: 800; color: var(--acc);">${personTotal.toFixed(2)} AED</span>
+                        </div>
+                        ${itemsHTML}
                     `;
-                } else {
-                    errDiv.innerHTML = `<strong>Error (${error.code || 'unknown'}):</strong> ${error.message}`;
-                }
-            };
+                    pList.appendChild(personBox);
+                });
+            }
 
-            try {
-                if (isMobile) {
-                    await signInWithRedirect(auth, provider);
-                } else {
-                    await signInWithPopup(auth, provider);
-                }
-            } catch (error) {
-                handleAuthError(error);
+            document.getElementById("ptot").innerText = pTot.toFixed(2) + " AED";
+        }
+
+        window.settleDebt = (expId) => {
+            const exp = S.exp.find(e => e.id === expId);
+            if (exp) {
+                exp.settled = true;
+                const card = S.cards.find(c => c.id === exp.cid);
+                if (card) card.bal += exp.amt;
+                saveCloudData();
+                render();
+                toast(`Settled ${exp.amt.toFixed(2)} AED!`);
             }
         };
 
-        // Expose function globally and bind directly to element listener
-        window.loginWithGoogle = handleGoogleLogin;
-        document.addEventListener("DOMContentLoaded", () => {
-            const btn = document.getElementById("btn-google-login");
-            if (btn) btn.addEventListener("click", handleGoogleLogin);
+        window.addCardAmount = (id) => {
+            const input = document.getElementById(`add-val-${id}`);
+            const val = parseFloat(input.value);
+            if (!val || val <= 0) return;
+            const card = S.cards.find(c => c.id === id);
+            if (card) {
+                card.bal += val;
+                saveCloudData();
+                render();
+                toast(`Added ${val.toFixed(2)} AED to ${card.name}`);
+            }
+        };
+
+        window.deleteCard = (id) => {
+            S.cards = S.cards.filter(c => c.id !== id);
+            saveCloudData();
+            render();
+        };
+
+        document.getElementById("addCard").addEventListener("click", () => {
+            const cn = document.getElementById("cn").value.trim();
+            const cb = parseFloat(document.getElementById("cb").value) || 0;
+            if (!cn) return;
+            S.cards.push({ id: 'c_' + Date.now(), name: cn, bal: cb });
+            document.getElementById("cn").value = "";
+            document.getElementById("cb").value = "";
+            saveCloudData();
+            render();
         });
 
-        window.confirmLogout = () => document.getElementById("logoutModal").classList.add("on");
-        window.closeLogoutModal = () => document.getElementById("logoutModal").classList.remove("on");
-
-        window.logoutUser = () => {
-            closeLogoutModal();
-            const logoutOverlay = document.getElementById("logout-overlay");
-            if (logoutOverlay) logoutOverlay.classList.add("on");
-            
-            // Clear local user cache on logout
-            if (currentUser) {
-                localStorage.removeItem(`cache_data_${currentUser.uid}`);
-            }
-            
-            signOut(auth).then(() => {
-                if (logoutOverlay) logoutOverlay.classList.remove("on");
-                // Hard reset memory state to guarantee fresh Google Sign-in trigger
-                window.location.reload();
-            }).catch(err => {
-                if (logoutOverlay) logoutOverlay.classList.remove("on");
-                console.error("Sign-out error:", err);
+        function renderExpenseForm() {
+            const catDiv = document.getElementById("catChips");
+            catDiv.innerHTML = "";
+            CATS.forEach(c => {
+                const b = document.createElement("button");
+                b.className = `chip ${selCat === c.id ? 'on' : ''}`;
+                b.innerText = c.n;
+                b.onclick = () => { selCat = c.id; renderExpenseForm(); };
+                catDiv.appendChild(b);
             });
+
+            const whoDiv = document.getElementById("whoChips");
+            whoDiv.innerHTML = "";
+            const WHO_OPTS = [
+                { id: 'me', n: 'Me' }, { id: 'colleague', n: 'Colleague' },
+                { id: 'roommate', n: 'Roommate' }, { id: 'other', n: 'Other' }
+            ];
+            WHO_OPTS.forEach(w => {
+                const b = document.createElement("button");
+                b.className = `chip ${selWho === w.id ? 'on' : ''}`;
+                b.innerText = w.n;
+                b.onclick = () => {
+                    selWho = w.id;
+                    document.getElementById("nameWrap").style.display = selWho === 'me' ? 'none' : 'block';
+                    renderExpenseForm();
+                };
+                whoDiv.appendChild(b);
+            });
+
+            const ecSelect = document.getElementById("ec");
+            ecSelect.innerHTML = "";
+            S.cards.forEach(c => {
+                ecSelect.innerHTML += `<option value="${c.id}">${c.name} (${c.bal.toFixed(2)} AED)</option>`;
+            });
+
+            document.getElementById("ed").valueAsDate = new Date();
+        }
+
+        document.getElementById("addExp").addEventListener("click", () => {
+            const amt = parseFloat(document.getElementById("ea").value);
+            const dt = document.getElementById("ed").value;
+            const cid = document.getElementById("ec").value;
+            const rmk = document.getElementById("er").value.trim();
+            const name = document.getElementById("en").value.trim();
+
+            if (!amt || amt <= 0 || !cid) {
+                document.getElementById("msg").innerText = "Please fill in a valid amount and card.";
+                return;
+            }
+
+            const card = S.cards.find(c => c.id === cid);
+            if (card) card.bal -= amt;
+
+            S.exp.push({
+                id: 'e_' + Date.now(),
+                amt: amt,
+                dt: dt,
+                cat: selCat,
+                cid: cid,
+                who: selWho,
+                name: selWho === 'me' ? '' : name,
+                rmk: rmk,
+                settled: false
+            });
+
+            saveCloudData();
+            document.getElementById("ea").value = "";
+            document.getElementById("er").value = "";
+            document.getElementById("en").value = "";
+            document.getElementById("msg").innerText = "";
+            render();
+            toast("Expense recorded!");
+        });
+
+        const mDayBtn = document.getElementById("mDay");
+        const mMonBtn = document.getElementById("mMon");
+        const singleWrap = document.getElementById("singleDateWrap");
+        const rangeWrap = document.getElementById("rangeDateWrap");
+        const rdInput = document.getElementById("rd");
+        const rdFromInput = document.getElementById("rdFrom");
+        const rdToInput = document.getElementById("rdTo");
+
+        const today = new Date().toISOString().split('T')[0];
+        rdInput.value = today;
+        rdFromInput.value = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
+        rdToInput.value = today;
+
+        mDayBtn.addEventListener("click", () => {
+            repMode = 'day';
+            mDayBtn.classList.add("on"); mMonBtn.classList.remove("on");
+            singleWrap.style.display = "block"; rangeWrap.style.display = "none";
+            renderReports();
+        });
+
+        mMonBtn.addEventListener("click", () => {
+            repMode = 'month';
+            mMonBtn.classList.add("on"); mDayBtn.classList.remove("on");
+            singleWrap.style.display = "none"; rangeWrap.style.display = "grid";
+            renderReports();
+        });
+
+        rdInput.addEventListener("change", renderReports);
+        rdFromInput.addEventListener("change", renderReports);
+        rdToInput.addEventListener("change", renderReports);
+
+        function renderReports() {
+            const q = document.getElementById("qSearch").value.toLowerCase();
+            const rList = document.getElementById("rlist");
+            rList.innerHTML = "";
+
+            const filtered = S.exp.filter(e => {
+                if (repMode === 'day') {
+                    if (rdInput.value && e.dt !== rdInput.value) return false;
+                } else if (repMode === 'month') {
+                    if (rdFromInput.value && e.dt < rdFromInput.value) return false;
+                    if (rdToInput.value && e.dt > rdToInput.value) return false;
+                }
+
+                const cObj = S.cards.find(c => c.id === e.cid);
+                const cName = cObj ? cObj.name.toLowerCase() : '';
+                const catObj = CATS.find(c => c.id === e.cat);
+                const catName = catObj ? catObj.n.toLowerCase() : e.cat.toLowerCase();
+
+                return (
+                    (e.rmk && e.rmk.toLowerCase().includes(q)) ||
+                    catName.includes(q) ||
+                    (e.name && e.name.toLowerCase().includes(q)) ||
+                    cName.includes(q)
+                );
+            });
+
+            document.getElementById("rcnt").innerText = `${filtered.length} entries`;
+
+            let tot = 0, pTot = 0, oTot = 0;
+            const catTotals = {};
+
+            filtered.forEach(e => {
+                tot += e.amt;
+                if (e.who === 'me') pTot += e.amt;
+                else oTot += e.amt;
+
+                catTotals[e.cat] = (catTotals[e.cat] || 0) + e.amt;
+
+                const cObj = S.cards.find(c => c.id === e.cid);
+                const catObj = CATS.find(c => c.id === e.cat);
+                const div = document.createElement("div");
+                div.className = "card-item-box row";
+                div.innerHTML = `
+                    <div>
+                        <div style="font-weight:600;">${catObj ? catObj.n : e.cat} - ${e.amt.toFixed(2)} AED ${e.settled ? '<span style="color:var(--acc); font-size:0.75rem;">(Settled)</span>' : ''}</div>
+                        <div class="mute" style="font-size:0.8rem;">
+                            ${e.dt} • Spent for: ${e.who} ${e.name ? `(${e.name})` : ''} • Card: ${cObj ? cObj.name : 'Unknown'}
+                        </div>
+                    </div>
+                    <button class="ghost" style="color:#ef4444;" onclick="deleteExp('${e.id}')">Delete</button>
+                `;
+                rList.appendChild(div);
+            });
+
+            if (filtered.length === 0) {
+                rList.innerHTML = `<div class="empty">No expenses found.</div>`;
+            }
+
+            const rCatDiv = document.getElementById("rcat");
+            rCatDiv.innerHTML = "";
+            Object.keys(catTotals).forEach(catId => {
+                const catObj = CATS.find(c => c.id === catId);
+                const catAmt = catTotals[catId];
+                const pct = tot > 0 ? (catAmt / tot * 100).toFixed(0) : 0;
+                
+                const cBox = document.createElement("div");
+                cBox.style.marginBottom = "8px";
+                cBox.innerHTML = `
+                    <div class="row" style="font-size:0.85rem; margin-bottom:2px;">
+                        <span>${catObj ? catObj.n : catId}</span>
+                        <span><strong>${catAmt.toFixed(2)} AED</strong> (${pct}%)</span>
+                    </div>
+                    <div class="bar"><i style="width:${pct}%;"></i></div>
+                `;
+                rCatDiv.appendChild(cBox);
+            });
+
+            document.getElementById("rt").innerText = tot.toFixed(2) + " AED";
+            document.getElementById("rme").innerText = `Personal: ${pTot.toFixed(2)} AED`;
+            document.getElementById("roth").innerText = `For others: ${oTot.toFixed(2)} AED`;
+        }
+
+        window.deleteExp = (id) => {
+            const exp = S.exp.find(e => e.id === id);
+            if (exp && !exp.settled) {
+                const card = S.cards.find(c => c.id === exp.cid);
+                if (card) card.bal += exp.amt;
+            }
+            S.exp = S.exp.filter(e => e.id !== id);
+            saveCloudData();
+            render();
+            toast("Transaction deleted");
         };
 
-        function getCurr() {
-            return S.currency || 'AED';
-        }
+        document.getElementById("qSearch").addEventListener("input", renderReports);
+
+        document.querySelectorAll("nav button").forEach(b => {
+            b.onclick = () => {
+                document.querySelectorAll("nav button").forEach(x => x.classList.remove("on"));
+                document.querySelectorAll(".view").forEach(v => v.classList.remove("on"));
+                b.classList.add("on");
+                document.getElementById(`v-${b.dataset.v}`).classList.add("on");
+                if (b.dataset.v === 'rep') renderReports();
+            };
+        });
+    </script>
+</body>
+</html>
