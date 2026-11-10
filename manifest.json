@@ -1,0 +1,24 @@
+{
+"name": "Expense Tracker Pro",
+"short_name": "ExpensePro",
+"description": "Keep track of cards, daily expenses, and group settlements effortlessly.",
+"start_url": "./index.html",
+"display": "standalone",
+"background_color": "#0d1a18",
+"theme_color": "#0d1a18",
+"orientation": "portrait-primary",
+"icons": [
+{
+"src": "https://cdn-icons-png.flaticon.com/512/2344/2344132.png",
+"sizes": "192x192",
+"type": "image/png",
+"purpose": "any maskable"
+},
+{
+"src": "https://cdn-icons-png.flaticon.com/512/2344/2344132.png",
+"sizes": "512x512",
+"type": "image/png",
+"purpose": "any maskable"
+}
+]
+}
