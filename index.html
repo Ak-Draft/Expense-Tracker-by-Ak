@@ -262,6 +262,7 @@
         .modal-overlay.on { opacity: 1; pointer-events: auto; }
         .modal-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; max-width: 360px; width: 100%; text-align: center; }
 
+        #auth-error { display: none; margin-top: 14px; padding: 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 12px; color: #fca5a5; font-size: 0.85rem; text-align: left; }
         #toast { position: fixed; left: 50%; bottom: 80px; transform: translate(-50%, 16px); background: var(--ink); color: var(--bg); padding: 10px 20px; border-radius: 99px; opacity: 0; transition: .25s; pointer-events: none; font-size: .9rem; z-index: 1000; font-weight: 500; }
         #toast.on { opacity: 1; transform: translate(-50%,0); }
     </style>
@@ -285,9 +286,9 @@
             <h1 style="font-size: 1.6rem; margin-bottom: 6px;">Expense Tracker Pro</h1>
             <p class="mute">Keep track of cards, daily expenses, and group settlements effortlessly.</p>
             
-            <button class="btn-google" onclick="loginDemo()">
+            <button class="btn-google" onclick="loginWithGoogle()">
                 <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.19v3.15C3.17 21.31 7.23 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.39-1.49-.39-2.24s.14-1.52.39-2.24V6.6H1.19C.43 8.13 0 9.87 0 11.7s.43 3.57 1.19 5.1l4.08-2.56z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.17 2.69 1.19 6.6l4.08 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
-                Sign in to Dashboard
+                Sign in with Google
             </button>
 
             <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line);">
@@ -295,13 +296,14 @@
                     "Do not save what is left after spending, spend what is left after saving."
                 </p>
             </div>
+            <div id="auth-error"></div>
         </div>
     </div>
 
     <!-- POST-LOGIN WELCOME OVERLAY -->
     <div id="welcome-overlay" class="welcome-overlay">
         <div class="welcome-spinner"></div>
-        <div style="font-size: 1.15rem; font-weight: 600;">Syncing your financial dashboard...</div>
+        <div id="welcome-quote" style="font-size: 1.15rem; font-weight: 600;">Syncing your financial dashboard...</div>
         <div id="welcome-user" style="color: var(--acc); margin-top: 6px;">Welcome back!</div>
     </div>
 
@@ -317,7 +319,7 @@
         <div class="header-bar">
             <div class="header-title">
                 <div class="user-chip">
-                    <span>👤</span> <span id="user-name">Wayne Tech</span>
+                    <span>👤</span> <span id="user-name">User</span>
                 </div>
                 <h1>Expense Tracker Pro</h1>
             </div>
@@ -414,34 +416,35 @@
 
     <div id="toast"></div>
 
-    <script>
-        // State management
-        let S = {
-            cards: [
-                { id: 'c1', name: 'Tabby', bal: 500 },
-                { id: 'c2', name: 'Visa', bal: 2000 }
-            ],
-            exp: [
-                { id: 'e1', amt: 1500, dt: new Date().toISOString().split('T')[0], cat: 'groc', cid: 'c1', who: 'other', name: 'Ana', rmk: 'Weekly split groceries', settled: false },
-                { id: 'e2', amt: 2150, dt: new Date().toISOString().split('T')[0], cat: 'rent', cid: 'c2', who: 'roommate', name: 'Anna', rmk: 'Apartment rent share', settled: false }
-            ]
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAjsYy2x73_KZ7nWtYn9ZY3XX6-4HJntHA",
+            authDomain: "daily-expense-tracker-27072.firebaseapp.com",
+            projectId: "daily-expense-tracker-27072",
+            storageBucket: "daily-expense-tracker-27072.firebasestorage.app",
+            messagingSenderId: "254799449978",
+            appId: "1:254799449978:web:e298de152ecc9512ce90c3",
+            measurementId: "G-DV15BR3SBQ"
         };
 
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        // Configure Provider & Force Account Selector Every Login
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({
+            prompt: 'select_account'
+        });
+
+        let S = { cards: [], exp: [] };
+        let currentUser = null;
         let repMode = 'day';
-        let selCat = 'food';
-        let selWho = 'me';
 
-        // Load saved local storage state
-        const savedData = localStorage.getItem("expense_app_data");
-        if (savedData) {
-            try { S = JSON.parse(savedData); } catch (e) {}
-        }
-
-        function saveData() {
-            localStorage.setItem("expense_app_data", JSON.stringify(S));
-        }
-
-        // Theme Switcher Logic
         const themeSelect = document.getElementById("themeSelectDropdown");
         const savedTheme = localStorage.getItem("app_theme") || "emerald";
         document.body.setAttribute("data-theme", savedTheme);
@@ -454,7 +457,6 @@
             });
         }
 
-        // Animated Rotating Quotes
         const quotes = [
             '"Do not save what is left after spending, spend what is left after saving."',
             '"A budget tells your money where to go instead of wondering where it went."',
@@ -481,20 +483,20 @@
             setTimeout(() => t.classList.remove("on"), 2400);
         }
 
-        // Auth Simulation Logic
-        window.loginDemo = () => {
-            const loggedOutView = document.getElementById("logged-out-wrapper");
-            const loggedInView = document.getElementById("logged-in-view");
-            const welcomeOverlay = document.getElementById("welcome-overlay");
-
-            loggedOutView.style.display = "none";
-            welcomeOverlay.classList.add("on");
-
-            setTimeout(() => {
-                welcomeOverlay.classList.remove("on");
-                loggedInView.style.display = "block";
-                render();
-            }, 500);
+        window.loginWithGoogle = () => {
+            signInWithPopup(auth, provider).catch((error) => {
+                const errDiv = document.getElementById("auth-error");
+                errDiv.style.display = "block";
+                const currentDomain = window.location.hostname;
+                if (error.code === 'auth/unauthorized-domain' || error.message.includes('unauthorized-domain')) {
+                    errDiv.innerHTML = `
+                        <strong>⚠️ Domain Not Authorized in Firebase</strong><br>
+                        Add <code style="color:var(--acc);">${currentDomain}</code> to Firebase Console under Authentication > Settings > Authorized Domains.
+                    `;
+                } else {
+                    errDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+                }
+            });
         };
 
         window.confirmLogout = () => document.getElementById("logoutModal").classList.add("on");
@@ -505,11 +507,74 @@
             const logoutOverlay = document.getElementById("logout-overlay");
             logoutOverlay.classList.add("on");
             setTimeout(() => {
-                logoutOverlay.classList.remove("on");
-                document.getElementById("logged-in-view").style.display = "none";
-                document.getElementById("logged-out-wrapper").style.display = "block";
+                signOut(auth).then(() => logoutOverlay.classList.remove("on"));
             }, 1000);
         };
+
+        async function loadCloudData(uid) {
+            const cachedData = localStorage.getItem(`cache_data_${uid}`);
+            if (cachedData) {
+                try { S = JSON.parse(cachedData); render(); } catch(e) {}
+            }
+            try {
+                const docRef = doc(db, "users", uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    S = docSnap.data();
+                    localStorage.setItem(`cache_data_${uid}`, JSON.stringify(S));
+                } else {
+                    S = { 
+                        cards: [
+                            { id: 'c1', name: 'Tabby', bal: 500 },
+                            { id: 'c2', name: 'Visa', bal: 2000 }
+                        ], 
+                        exp: [
+                            { id: 'e1', amt: 1500, dt: new Date().toISOString().split('T')[0], cat: 'groc', cid: 'c1', who: 'other', name: 'Ana', rmk: 'Weekly split groceries', settled: false },
+                            { id: 'e2', amt: 2150, dt: new Date().toISOString().split('T')[0], cat: 'rent', cid: 'c2', who: 'roommate', name: 'Anna', rmk: 'Apartment rent share', settled: false }
+                        ] 
+                    };
+                    await setDoc(docRef, S);
+                }
+            } catch (e) {}
+            render();
+        }
+
+        async function saveCloudData() {
+            if (!currentUser) return;
+            localStorage.setItem(`cache_data_${currentUser.uid}`, JSON.stringify(S));
+            try { await setDoc(doc(db, "users", currentUser.uid), S); } catch (e) {}
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            const loggedOutView = document.getElementById("logged-out-wrapper");
+            const loggedInView = document.getElementById("logged-in-view");
+            const welcomeOverlay = document.getElementById("welcome-overlay");
+
+            if (user) {
+                currentUser = user;
+                document.getElementById("user-name").innerText = user.displayName ? user.displayName.split(' ')[0] : "User";
+                document.getElementById("welcome-user").innerText = `Welcome back, ${user.displayName || 'User'}! 👋`;
+                loggedOutView.style.display = "none";
+                welcomeOverlay.classList.add("on");
+
+                const forceHideTimer = setTimeout(() => {
+                    welcomeOverlay.classList.remove("on");
+                    loggedInView.style.display = "block";
+                }, 1200);
+
+                loadCloudData(user.uid).then(() => {
+                    clearTimeout(forceHideTimer);
+                    setTimeout(() => {
+                        welcomeOverlay.classList.remove("on");
+                        loggedInView.style.display = "block";
+                    }, 200);
+                });
+            } else {
+                currentUser = null;
+                loggedOutView.style.display = "block";
+                loggedInView.style.display = "none";
+            }
+        });
 
         const CATS = [
             { id: 'food', n: '🍔 Food' }, { id: 'groc', n: '🛒 Groceries' },
@@ -518,6 +583,9 @@
             { id: 'fun', n: '🎮 Fun' }, { id: 'rent', n: '🏠 Rent' },
             { id: 'oth', n: '📦 Other' }
         ];
+
+        let selCat = 'food';
+        let selWho = 'me';
 
         function render() {
             renderCardsAndPeople();
@@ -577,7 +645,7 @@
                         const cardObj = S.cards.find(c => c.id === item.cid);
                         const cardName = cardObj ? cardObj.name : 'Unknown Card';
                         itemsHTML += `
-                            <div style="display:flex; align-items:center; justify-space-between; padding: 6px 0; border-top: 1px dashed var(--line); margin-top:6px; font-size:0.85rem;">
+                            <div style="display:flex; align-items:center; justify-content:space-between; padding: 6px 0; border-top: 1px dashed var(--line); margin-top:6px; font-size:0.85rem;">
                                 <div>
                                     <span style="font-weight:600; color:var(--ink);">${item.amt.toFixed(2)} AED</span>
                                     <span class="mute"> paid via 💳 <strong>${cardName}</strong> (${item.dt})</span>
@@ -607,7 +675,7 @@
                 exp.settled = true;
                 const card = S.cards.find(c => c.id === exp.cid);
                 if (card) card.bal += exp.amt;
-                saveData();
+                saveCloudData();
                 render();
                 toast(`Settled ${exp.amt.toFixed(2)} AED!`);
             }
@@ -620,7 +688,7 @@
             const card = S.cards.find(c => c.id === id);
             if (card) {
                 card.bal += val;
-                saveData();
+                saveCloudData();
                 render();
                 toast(`Added ${val.toFixed(2)} AED to ${card.name}`);
             }
@@ -628,7 +696,7 @@
 
         window.deleteCard = (id) => {
             S.cards = S.cards.filter(c => c.id !== id);
-            saveData();
+            saveCloudData();
             render();
         };
 
@@ -639,7 +707,7 @@
             S.cards.push({ id: 'c_' + Date.now(), name: cn, bal: cb });
             document.getElementById("cn").value = "";
             document.getElementById("cb").value = "";
-            saveData();
+            saveCloudData();
             render();
         });
 
@@ -708,7 +776,7 @@
                 settled: false
             });
 
-            saveData();
+            saveCloudData();
             document.getElementById("ea").value = "";
             document.getElementById("er").value = "";
             document.getElementById("en").value = "";
@@ -837,7 +905,7 @@
                 if (card) card.bal += exp.amt;
             }
             S.exp = S.exp.filter(e => e.id !== id);
-            saveData();
+            saveCloudData();
             render();
             toast("Transaction deleted");
         };
