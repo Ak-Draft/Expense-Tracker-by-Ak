@@ -418,7 +418,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -429,6 +429,104 @@
             messagingSenderId: "254799449978",
             appId: "1:254799449978:web:e298de152ecc9512ce90c3",
             measurementId: "G-DV15BR3SBQ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        // Configure Provider & Force Account Selector Every Login
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({
+            prompt: 'select_account'
+        });
+
+        let S = { cards: [], exp: [] };
+        let currentUser = null;
+        let repMode = 'day';
+
+        const themeSelect = document.getElementById("themeSelectDropdown");
+        const savedTheme = localStorage.getItem("app_theme") || "emerald";
+        document.body.setAttribute("data-theme", savedTheme);
+        if (themeSelect) {
+            themeSelect.value = savedTheme;
+            themeSelect.addEventListener("change", (e) => {
+                const val = e.target.value;
+                document.body.setAttribute("data-theme", val);
+                localStorage.setItem("app_theme", val);
+            });
+        }
+
+        const quotes = [
+            '"Do not save what is left after spending, spend what is left after saving."',
+            '"A budget tells your money where to go instead of wondering where it went."',
+            '"Beware of little expenses; a small leak will sink a great ship."',
+            '"Money is a terrible master but an excellent servant."'
+        ];
+        let quoteIdx = 0;
+        setInterval(() => {
+            const qEl = document.getElementById("panel-quote");
+            if (qEl) {
+                qEl.style.opacity = '0';
+                setTimeout(() => {
+                    quoteIdx = (quoteIdx + 1) % quotes.length;
+                    qEl.innerText = quotes[quoteIdx];
+                    qEl.style.opacity = '1';
+                }, 500);
+            }
+        }, 4000);
+
+        function toast(m) {
+            const t = document.getElementById("toast");
+            t.innerText = m;
+            t.classList.add("on");
+            setTimeout(() => t.classList.remove("on"), 2400);
+        }
+
+        window.loginWithGoogle = () => {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            const handleAuthError = (error) => {
+                const errDiv = document.getElementById("auth-error");
+                errDiv.style.display = "block";
+                const currentDomain = window.location.hostname;
+                if (error.code === 'auth/unauthorized-domain' || error.message.includes('unauthorized-domain')) {
+                    errDiv.innerHTML = `
+                        <strong>⚠️ Domain Not Authorized in Firebase</strong><br>
+                        Add <code style="color:var(--acc);">${currentDomain}</code> to Firebase Console under Authentication > Settings > Authorized Domains.
+                    `;
+                } else {
+                    errDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+                }
+            };
+
+            if (isMobile) {
+                signInWithRedirect(auth, provider).catch(handleAuthError);
+            } else {
+                signInWithPopup(auth, provider).catch(handleAuthError);
+            }
+        };
+
+        window.confirmLogout = () => document.getElementById("logoutModal").classList.add("on");
+        window.closeLogoutModal = () => document.getElementById("logoutModal").classList.remove("on");
+
+        window.logoutUser = () => {
+            closeLogoutModal();
+            const logoutOverlay = document.getElementById("logout-overlay");
+            logoutOverlay.classList.add("on");
+            
+            // Clear local storage and session cache before signing out
+            const activeTheme = localStorage.getItem("app_theme");
+            localStorage.clear();
+            sessionStorage.clear();
+            if (activeTheme) localStorage.setItem("app_theme", activeTheme);
+
+            setTimeout(() => {
+                signOut(auth).then(() => {
+                    logoutOverlay.classList.remove("on");
+                    window.location.reload();
+                });
+            }, 800);
         };
 
         const app = initializeApp(firebaseConfig);
