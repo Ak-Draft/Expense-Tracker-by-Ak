@@ -35,6 +35,9 @@
             --on: #05211c;
             --warn: #fb923c;
             --bar: #1f4a41;
+            --pad-fluid: clamp(10px, 3vw, 20px);
+            --font-title: clamp(1.15rem, 4vw, 1.6rem);
+            --font-big: clamp(1.4rem, 5vw, 2.1rem);
             color-scheme: dark;
         }
 
@@ -77,11 +80,13 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Bricolage Grotesque', 'Inter', sans-serif; }
+        html, body { width: 100%; overflow-x: hidden; }
         body { 
             background: var(--bg); 
             color: var(--ink); 
-            padding: 12px 14px 96px; 
-            max-width: 600px; 
+            padding: var(--pad-fluid);
+            padding-bottom: calc(76px + env(safe-area-inset-bottom, 16px)); 
+            max-width: 768px; 
             margin-inline: auto; 
             min-height: 100vh; 
             transition: background 0.4s ease, color 0.4s ease;
@@ -93,12 +98,11 @@
             align-items: center;
             justify-content: flex-end;
             gap: 8px;
-            margin: 12px auto 12px;
+            margin: 8px auto 16px;
             width: 100%;
-            max-width: 420px;
+            max-width: 500px;
             z-index: 10;
             position: relative;
-            padding-right: 4px;
         }
         .theme-select {
             background: var(--card);
@@ -106,11 +110,12 @@
             border: 1px solid var(--line);
             border-radius: 12px;
             padding: 8px 12px;
-            font-size: 0.85rem;
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
             font-weight: 500;
             cursor: pointer;
             width: auto;
-            min-width: 150px;
+            min-width: 140px;
+            max-width: 100%;
             outline: none;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             transition: all 0.25s ease;
@@ -125,45 +130,47 @@
             gap: 10px;
         }
         .header-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .user-chip { display: flex; align-items: center; gap: 6px; background: var(--card); border: 1px solid var(--line); padding: 5px 12px; border-radius: 99px; font-size: 0.85rem; font-weight: 500; }
-        h1 { font-size: 1.25rem; font-weight: 700; color: var(--ink); }
+        .user-chip { display: flex; align-items: center; gap: 6px; background: var(--card); border: 1px solid var(--line); padding: 6px 14px; border-radius: 99px; font-size: clamp(0.75rem, 2.5vw, 0.85rem); font-weight: 500; }
+        h1 { font-size: var(--font-title); font-weight: 700; color: var(--ink); line-height: 1.2; }
 
-        .big { font-size: 1.75rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin-top: 4px; word-break: break-word; }
-        .mute { color: var(--mute); font-size: 0.85rem; }
-        .box { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+        .big { font-size: var(--font-big); font-weight: 800; letter-spacing: -.02em; line-height: 1.15; margin-top: 4px; word-break: break-word; }
+        .mute { color: var(--mute); font-size: clamp(0.78rem, 2.4vw, 0.85rem); }
+        .box { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: var(--pad-fluid); margin-bottom: 12px; }
         .row { display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-        .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+        .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 10px; }
         
-        label { display: block; font-size: 0.8rem; color: var(--mute); margin: 10px 0 4px; font-weight: 500; }
+        label { display: block; font-size: clamp(0.75rem, 2.2vw, 0.8rem); color: var(--mute); margin: 10px 0 4px; font-weight: 500; }
         input, select, textarea { 
             width: 100%; 
             font: inherit; 
+            font-size: clamp(0.85rem, 2.8vw, 0.95rem);
             color: var(--ink); 
             background: var(--bg); 
             border: 1px solid var(--line); 
             border-radius: 12px; 
-            padding: 12px 14px; 
-            min-height: 44px;
+            padding: 10px 14px; 
+            min-height: 46px;
         }
         input:focus, select:focus, textarea:focus { outline: 2px solid var(--acc); }
         
         button { 
             font: inherit; 
+            font-size: clamp(0.85rem, 2.6vw, 0.95rem);
             cursor: pointer; 
             border: 0; 
             border-radius: 12px; 
-            padding: 12px 16px; 
+            padding: 10px 16px; 
             background: var(--acc); 
             color: var(--on); 
             font-weight: 600; 
-            min-height: 44px;
+            min-height: 46px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             transition: transform 0.15s ease, opacity 0.2s ease;
         }
         button:active { transform: scale(0.97); }
-        button.ghost { background: transparent; color: var(--mute); border: 1px solid var(--line); padding: 8px 14px; font-size: 0.85rem; min-height: 38px; }
+        button.ghost { background: transparent; color: var(--mute); border: 1px solid var(--line); padding: 8px 14px; font-size: 0.85rem; min-height: 40px; }
         button.full { width: 100%; margin-top: 14px; }
         button.danger { background: #ef4444; color: white; }
 
@@ -172,11 +179,12 @@
             background: var(--bg); 
             color: var(--ink); 
             border: 1px solid var(--line); 
-            padding: 9px 16px; 
+            padding: 8px 14px; 
             border-radius: 99px; 
-            font-size: 0.85rem; 
+            font-size: clamp(0.78rem, 2.5vw, 0.85rem); 
             cursor: pointer; 
-            min-height: 40px;
+            min-height: 42px;
+            flex-grow: 0;
         }
         .chip.on { background: var(--acc); color: var(--on); border-color: var(--acc); font-weight: 600; box-shadow: 0 2px 10px rgba(63, 196, 170, 0.3); }
 
@@ -189,21 +197,22 @@
             display: flex; 
             background: var(--card); 
             border-top: 1px solid var(--line); 
-            max-width: 600px; 
+            max-width: 768px; 
             margin: 0 auto; 
             z-index: 100; 
             padding-bottom: env(safe-area-inset-bottom, 0px);
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.25);
         }
         nav button { 
             flex: 1; 
             background: none; 
             color: var(--mute); 
             border-radius: 0; 
-            padding: 14px 4px; 
+            padding: 12px 6px; 
             font-weight: 600; 
             border-top: 3px solid transparent; 
-            font-size: 0.85rem; 
-            min-height: 52px;
+            font-size: clamp(0.75rem, 2.6vw, 0.88rem); 
+            min-height: 54px;
         }
         nav button.on { color: var(--acc); border-top-color: var(--acc); background: rgba(63, 196, 170, 0.06); }
 
@@ -212,7 +221,7 @@
         .empty { color: var(--mute); text-align: center; padding: 28px 8px; font-size: 0.9rem; }
 
         @keyframes cardPopIn {
-            0% { opacity: 0; transform: translateY(-12px) scale(0.97); }
+            0% { opacity: 0; transform: translateY(-10px) scale(0.98); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
@@ -222,16 +231,16 @@
             background: var(--card);
             border: 1px solid var(--line);
             border-radius: 16px;
-            padding: 14px 16px;
+            padding: var(--pad-fluid);
             margin-bottom: 12px;
         }
-        .card-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
+        .card-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
         .card-item-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%; }
-        .add-amount-input { padding: 10px 12px; font-size: 0.85rem; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); flex: 1; min-width: 120px; }
+        .add-amount-input { padding: 10px 12px; font-size: 0.85rem; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); flex: 1 1 140px; min-width: 120px; }
 
         .auth-container { 
-            width: 100%; max-width: 420px; margin: 20px auto 0; 
-            background: var(--card); border-radius: 24px; padding: 36px 24px; 
+            width: 100%; max-width: 460px; margin: 12px auto 0; 
+            background: var(--card); border-radius: 24px; padding: clamp(20px, 5vw, 36px) clamp(16px, 4vw, 28px); 
             text-align: center; position: relative; z-index: 1;
         }
 
@@ -242,14 +251,14 @@
             justify-content: center; text-align: center; padding: 24px;
         }
         .welcome-overlay.on { display: flex; }
-        .welcome-spinner { width: 56px; height: 56px; border: 4px solid var(--bar); border-top: 4px solid var(--acc); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        .welcome-spinner { width: 48px; height: 48px; border: 4px solid var(--bar); border-top: 4px solid var(--acc); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 18px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .btn-google { 
             background: linear-gradient(90deg, #ffffff 0%, #f1f5f9 50%, #ffffff 100%); 
-            color: #334155; width: 100%; padding: 14px; font-size: 0.95rem; font-weight: 600; 
+            color: #334155; width: 100%; padding: 14px; font-size: clamp(0.85rem, 2.8vw, 0.95rem); font-weight: 600; 
             display: inline-flex; align-items: center; justify-content: center; gap: 12px; 
-            border-radius: 14px; margin-top: 24px; border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 14px; margin-top: 20px; border: 1px solid rgba(255, 255, 255, 0.4);
             cursor: pointer;
         }
 
@@ -260,11 +269,17 @@
             z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 16px;
         }
         .modal-overlay.on { opacity: 1; pointer-events: auto; }
-        .modal-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; max-width: 360px; width: 100%; text-align: center; }
+        .modal-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; max-width: 380px; width: 100%; text-align: center; }
 
         #auth-error { display: none; margin-top: 14px; padding: 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 12px; color: #fca5a5; font-size: 0.85rem; text-align: left; }
-        #toast { position: fixed; left: 50%; bottom: 80px; transform: translate(-50%, 16px); background: var(--ink); color: var(--bg); padding: 10px 20px; border-radius: 99px; opacity: 0; transition: .25s; pointer-events: none; font-size: .9rem; z-index: 1000; font-weight: 500; }
+        #toast { position: fixed; left: 50%; bottom: 84px; transform: translate(-50%, 16px); background: var(--ink); color: var(--bg); padding: 10px 20px; border-radius: 99px; opacity: 0; transition: .25s; pointer-events: none; font-size: .88rem; z-index: 1000; font-weight: 500; max-width: 90vw; text-align: center; }
         #toast.on { opacity: 1; transform: translate(-50%,0); }
+
+        @media (min-width: 640px) {
+            .two { grid-template-columns: repeat(2, 1fr); }
+            nav button { font-size: 0.9rem; }
+            .card-item-actions { flex-wrap: nowrap; }
+        }
     </style>
 </head>
 <body>
@@ -314,6 +329,30 @@
         <div style="color: var(--mute); font-size: 0.9rem; margin-top: 6px;">Clearing session & securing your data 🔒</div>
     </div>
 
+    <!-- FIRST-TIME CURRENCY SETUP MODAL -->
+    <div class="modal-overlay" id="currencyModal">
+        <div class="modal-card">
+            <div style="font-size: 2.5rem; margin-bottom: 8px;">🌍</div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 6px;">Welcome to Expense Tracker!</h3>
+            <p class="mute" style="margin-bottom: 16px;">Please choose your preferred currency to get started.</p>
+            
+            <label for="currencySelect" style="text-align: left; margin-bottom: 6px;">Primary Currency</label>
+            <select id="currencySelect" style="margin-bottom: 20px;">
+                <option value="AED">AED (Dh - United Arab Emirates Dirham)</option>
+                <option value="USD">USD ($ - US Dollar)</option>
+                <option value="EUR">EUR (€ - Euro)</option>
+                <option value="GBP">GBP (£ - British Pound)</option>
+                <option value="INR">INR (₹ - Indian Rupee)</option>
+                <option value="SAR">SAR (SR - Saudi Riyal)</option>
+                <option value="QAR">QAR (QR - Qatari Riyal)</option>
+                <option value="CAD">CAD ($ - Canadian Dollar)</option>
+                <option value="AUD">AUD ($ - Australian Dollar)</option>
+            </select>
+            
+            <button class="full" id="saveCurrencyBtn" style="margin-top: 0;">Continue to Dashboard 🚀</button>
+        </div>
+    </div>
+
     <!-- LOGGED IN VIEW -->
     <div id="logged-in-view" style="display: none;">
         <div class="header-bar">
@@ -340,7 +379,7 @@
                     <summary style="cursor:pointer; font-weight:600; color:var(--acc);">+ Add New Card</summary>
                     <div style="margin-top:10px;">
                         <label for="cn">Card Name</label><input id="cn" placeholder="e.g. Visa Salary">
-                        <label for="cb">Starting Balance (AED)</label><input id="cb" type="number" step="0.01" placeholder="0.00">
+                        <label for="cb">Starting Balance (<span class="curr-label">AED</span>)</label><input id="cb" type="number" step="0.01" placeholder="0.00">
                         <button class="full" id="addCard">Save Card</button>
                     </div>
                 </details>
@@ -353,7 +392,7 @@
         <section id="v-add" class="view">
             <div class="box">
                 <div class="two">
-                    <div><label for="ea">Amount (AED)</label><input id="ea" type="number" step="0.01" placeholder="0.00"></div>
+                    <div><label for="ea">Amount (<span class="curr-label">AED</span>)</label><input id="ea" type="number" step="0.01" placeholder="0.00"></div>
                     <div><label for="ed">Date</label><input id="ed" type="date"></div>
                 </div>
                 <label>Category</label><div class="chips" id="catChips"></div>
@@ -510,435 +549,8 @@
         window.confirmLogout = () => document.getElementById("logoutModal").classList.add("on");
         window.closeLogoutModal = () => document.getElementById("logoutModal").classList.remove("on");
 
-        window.logoutUser = () => {
-            closeLogoutModal();
-            const logoutOverlay = document.getElementById("logout-overlay");
-            logoutOverlay.classList.add("on");
-            
-            // Clear local storage and session cache before signing out
-            const activeTheme = localStorage.getItem("app_theme");
-            localStorage.clear();
-            sessionStorage.clear();
-            if (activeTheme) localStorage.setItem("app_theme", activeTheme);
+        // Removed duplicate 'currentUser' & 'repMode' declarations that caused the SyntaxError
 
-            setTimeout(() => {
-                signOut(auth).then(() => {
-                    logoutOverlay.classList.remove("on");
-                    window.location.reload();
-                });
-            }, 800);
-        };
-
-        async function loadCloudData(uid) {
-            const cachedData = localStorage.getItem(`cache_data_${uid}`);
-            if (cachedData) {
-                try { S = JSON.parse(cachedData); render(); } catch(e) {}
-            }
-            try {
-                const docRef = doc(db, "users", uid);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    S = docSnap.data();
-                    localStorage.setItem(`cache_data_${uid}`, JSON.stringify(S));
-                } else {
-                    S = { 
-                        cards: [
-                            { id: 'c1', name: 'Tabby', bal: 500 },
-                            { id: 'c2', name: 'Visa', bal: 2000 }
-                        ], 
-                        exp: [
-                            { id: 'e1', amt: 1500, dt: new Date().toISOString().split('T')[0], cat: 'groc', cid: 'c1', who: 'other', name: 'Ana', rmk: 'Weekly split groceries', settled: false },
-                            { id: 'e2', amt: 2150, dt: new Date().toISOString().split('T')[0], cat: 'rent', cid: 'c2', who: 'roommate', name: 'Anna', rmk: 'Apartment rent share', settled: false }
-                        ] 
-                    };
-                    await setDoc(docRef, S);
-                }
-            } catch (e) {}
-            render();
+        function getCurr() {
+            return S.currency || 'AED';
         }
-
-        async function saveCloudData() {
-            if (!currentUser) return;
-            localStorage.setItem(`cache_data_${currentUser.uid}`, JSON.stringify(S));
-            try { await setDoc(doc(db, "users", currentUser.uid), S); } catch (e) {}
-        }
-
-        onAuthStateChanged(auth, (user) => {
-            const loggedOutView = document.getElementById("logged-out-wrapper");
-            const loggedInView = document.getElementById("logged-in-view");
-            const welcomeOverlay = document.getElementById("welcome-overlay");
-
-            if (user) {
-                currentUser = user;
-                document.getElementById("user-name").innerText = user.displayName ? user.displayName.split(' ')[0] : "User";
-                document.getElementById("welcome-user").innerText = `Welcome back, ${user.displayName || 'User'}! 👋`;
-                loggedOutView.style.display = "none";
-                welcomeOverlay.classList.add("on");
-
-                const forceHideTimer = setTimeout(() => {
-                    welcomeOverlay.classList.remove("on");
-                    loggedInView.style.display = "block";
-                }, 1200);
-
-                loadCloudData(user.uid).then(() => {
-                    clearTimeout(forceHideTimer);
-                    setTimeout(() => {
-                        welcomeOverlay.classList.remove("on");
-                        loggedInView.style.display = "block";
-                    }, 200);
-                });
-            } else {
-                currentUser = null;
-                loggedOutView.style.display = "block";
-                loggedInView.style.display = "none";
-            }
-        });
-
-        const CATS = [
-            { id: 'food', n: '🍔 Food' }, { id: 'groc', n: '🛒 Groceries' },
-            { id: 'trans', n: '🚗 Transport' }, { id: 'bills', n: '💡 Bills' },
-            { id: 'shop', n: '🛍️ Shopping' }, { id: 'hlth', n: '🏥 Health' },
-            { id: 'fun', n: '🎮 Fun' }, { id: 'rent', n: '🏠 Rent' },
-            { id: 'oth', n: '📦 Other' }
-        ];
-
-        let selCat = 'food';
-        let selWho = 'me';
-
-        function render() {
-            renderCardsAndPeople();
-            renderExpenseForm();
-            renderReports();
-        }
-
-        function renderCardsAndPeople() {
-            const cList = document.getElementById("cardList");
-            cList.innerHTML = "";
-            let totalBal = 0;
-
-            S.cards.forEach(c => {
-                totalBal += c.bal;
-                const cardDiv = document.createElement("div");
-                cardDiv.className = "card-item-box card-anim";
-                cardDiv.innerHTML = `
-                    <div class="card-item-header">
-                        <span style="font-weight:600;">💳 ${c.name}</span>
-                        <span style="font-weight:700; color:var(--acc);">${c.bal.toFixed(2)} AED</span>
-                    </div>
-                    <div class="card-item-actions">
-                        <input type="number" step="0.01" class="add-amount-input" placeholder="Add amount" id="add-val-${c.id}">
-                        <button style="padding: 8px 16px;" onclick="addCardAmount('${c.id}')">Add</button>
-                        <button class="ghost" style="color:#ef4444;" onclick="deleteCard('${c.id}')">Delete</button>
-                    </div>
-                `;
-                cList.appendChild(cardDiv);
-            });
-
-            document.getElementById("total").innerText = totalBal.toFixed(2) + " AED";
-
-            const peopleDebts = {};
-            let pTot = 0;
-
-            S.exp.filter(e => e.who !== 'me' && e.name && !e.settled).forEach(e => {
-                pTot += e.amt;
-                if (!peopleDebts[e.name]) peopleDebts[e.name] = [];
-                peopleDebts[e.name].push(e);
-            });
-
-            const pList = document.getElementById("plist");
-            pList.innerHTML = "";
-            const personNames = Object.keys(peopleDebts);
-
-            if (personNames.length === 0) {
-                pList.innerHTML = `<div class="empty">Nobody owes you money right now. 🎉</div>`;
-            } else {
-                personNames.forEach(person => {
-                    const exps = peopleDebts[person];
-                    const personTotal = exps.reduce((sum, item) => sum + item.amt, 0);
-                    const personBox = document.createElement("div");
-                    personBox.className = "card-item-box card-anim";
-                    
-                    let itemsHTML = "";
-                    exps.forEach(item => {
-                        const cardObj = S.cards.find(c => c.id === item.cid);
-                        const cardName = cardObj ? cardObj.name : 'Unknown Card';
-                        itemsHTML += `
-                            <div style="display:flex; align-items:center; justify-content:space-between; padding: 6px 0; border-top: 1px dashed var(--line); margin-top:6px; font-size:0.85rem;">
-                                <div>
-                                    <span style="font-weight:600; color:var(--ink);">${item.amt.toFixed(2)} AED</span>
-                                    <span class="mute"> paid via 💳 <strong>${cardName}</strong> (${item.dt})</span>
-                                </div>
-                                <button style="padding: 4px 10px; font-size:0.75rem; min-height: 30px;" onclick="settleDebt('${item.id}')">Settled</button>
-                            </div>
-                        `;
-                    });
-
-                    personBox.innerHTML = `
-                        <div class="row" style="margin-bottom: 4px;">
-                            <span style="font-weight: 700;">👤 ${person}</span>
-                            <span style="font-weight: 800; color: var(--acc);">${personTotal.toFixed(2)} AED</span>
-                        </div>
-                        ${itemsHTML}
-                    `;
-                    pList.appendChild(personBox);
-                });
-            }
-
-            document.getElementById("ptot").innerText = pTot.toFixed(2) + " AED";
-        }
-
-        window.settleDebt = (expId) => {
-            const exp = S.exp.find(e => e.id === expId);
-            if (exp) {
-                exp.settled = true;
-                const card = S.cards.find(c => c.id === exp.cid);
-                if (card) card.bal += exp.amt;
-                saveCloudData();
-                render();
-                toast(`Settled ${exp.amt.toFixed(2)} AED!`);
-            }
-        };
-
-        window.addCardAmount = (id) => {
-            const input = document.getElementById(`add-val-${id}`);
-            const val = parseFloat(input.value);
-            if (!val || val <= 0) return;
-            const card = S.cards.find(c => c.id === id);
-            if (card) {
-                card.bal += val;
-                saveCloudData();
-                render();
-                toast(`Added ${val.toFixed(2)} AED to ${card.name}`);
-            }
-        };
-
-        window.deleteCard = (id) => {
-            S.cards = S.cards.filter(c => c.id !== id);
-            saveCloudData();
-            render();
-        };
-
-        document.getElementById("addCard").addEventListener("click", () => {
-            const cn = document.getElementById("cn").value.trim();
-            const cb = parseFloat(document.getElementById("cb").value) || 0;
-            if (!cn) return;
-            S.cards.push({ id: 'c_' + Date.now(), name: cn, bal: cb });
-            document.getElementById("cn").value = "";
-            document.getElementById("cb").value = "";
-            saveCloudData();
-            render();
-        });
-
-        function renderExpenseForm() {
-            const catDiv = document.getElementById("catChips");
-            catDiv.innerHTML = "";
-            CATS.forEach(c => {
-                const b = document.createElement("button");
-                b.className = `chip ${selCat === c.id ? 'on' : ''}`;
-                b.innerText = c.n;
-                b.onclick = () => { selCat = c.id; renderExpenseForm(); };
-                catDiv.appendChild(b);
-            });
-
-            const whoDiv = document.getElementById("whoChips");
-            whoDiv.innerHTML = "";
-            const WHO_OPTS = [
-                { id: 'me', n: 'Me' }, { id: 'colleague', n: 'Colleague' },
-                { id: 'roommate', n: 'Roommate' }, { id: 'other', n: 'Other' }
-            ];
-            WHO_OPTS.forEach(w => {
-                const b = document.createElement("button");
-                b.className = `chip ${selWho === w.id ? 'on' : ''}`;
-                b.innerText = w.n;
-                b.onclick = () => {
-                    selWho = w.id;
-                    document.getElementById("nameWrap").style.display = selWho === 'me' ? 'none' : 'block';
-                    renderExpenseForm();
-                };
-                whoDiv.appendChild(b);
-            });
-
-            const ecSelect = document.getElementById("ec");
-            ecSelect.innerHTML = "";
-            S.cards.forEach(c => {
-                ecSelect.innerHTML += `<option value="${c.id}">${c.name} (${c.bal.toFixed(2)} AED)</option>`;
-            });
-
-            document.getElementById("ed").valueAsDate = new Date();
-        }
-
-        document.getElementById("addExp").addEventListener("click", () => {
-            const amt = parseFloat(document.getElementById("ea").value);
-            const dt = document.getElementById("ed").value;
-            const cid = document.getElementById("ec").value;
-            const rmk = document.getElementById("er").value.trim();
-            const name = document.getElementById("en").value.trim();
-
-            if (!amt || amt <= 0 || !cid) {
-                document.getElementById("msg").innerText = "Please fill in a valid amount and card.";
-                return;
-            }
-
-            const card = S.cards.find(c => c.id === cid);
-            if (card) card.bal -= amt;
-
-            S.exp.push({
-                id: 'e_' + Date.now(),
-                amt: amt,
-                dt: dt,
-                cat: selCat,
-                cid: cid,
-                who: selWho,
-                name: selWho === 'me' ? '' : name,
-                rmk: rmk,
-                settled: false
-            });
-
-            saveCloudData();
-            document.getElementById("ea").value = "";
-            document.getElementById("er").value = "";
-            document.getElementById("en").value = "";
-            document.getElementById("msg").innerText = "";
-            render();
-            toast("Expense recorded!");
-        });
-
-        const mDayBtn = document.getElementById("mDay");
-        const mMonBtn = document.getElementById("mMon");
-        const singleWrap = document.getElementById("singleDateWrap");
-        const rangeWrap = document.getElementById("rangeDateWrap");
-        const rdInput = document.getElementById("rd");
-        const rdFromInput = document.getElementById("rdFrom");
-        const rdToInput = document.getElementById("rdTo");
-
-        const today = new Date().toISOString().split('T')[0];
-        rdInput.value = today;
-        rdFromInput.value = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
-        rdToInput.value = today;
-
-        mDayBtn.addEventListener("click", () => {
-            repMode = 'day';
-            mDayBtn.classList.add("on"); mMonBtn.classList.remove("on");
-            singleWrap.style.display = "block"; rangeWrap.style.display = "none";
-            renderReports();
-        });
-
-        mMonBtn.addEventListener("click", () => {
-            repMode = 'month';
-            mMonBtn.classList.add("on"); mDayBtn.classList.remove("on");
-            singleWrap.style.display = "none"; rangeWrap.style.display = "grid";
-            renderReports();
-        });
-
-        rdInput.addEventListener("change", renderReports);
-        rdFromInput.addEventListener("change", renderReports);
-        rdToInput.addEventListener("change", renderReports);
-
-        function renderReports() {
-            const q = document.getElementById("qSearch").value.toLowerCase();
-            const rList = document.getElementById("rlist");
-            rList.innerHTML = "";
-
-            const filtered = S.exp.filter(e => {
-                if (repMode === 'day') {
-                    if (rdInput.value && e.dt !== rdInput.value) return false;
-                } else if (repMode === 'month') {
-                    if (rdFromInput.value && e.dt < rdFromInput.value) return false;
-                    if (rdToInput.value && e.dt > rdToInput.value) return false;
-                }
-
-                const cObj = S.cards.find(c => c.id === e.cid);
-                const cName = cObj ? cObj.name.toLowerCase() : '';
-                const catObj = CATS.find(c => c.id === e.cat);
-                const catName = catObj ? catObj.n.toLowerCase() : e.cat.toLowerCase();
-
-                return (
-                    (e.rmk && e.rmk.toLowerCase().includes(q)) ||
-                    catName.includes(q) ||
-                    (e.name && e.name.toLowerCase().includes(q)) ||
-                    cName.includes(q)
-                );
-            });
-
-            document.getElementById("rcnt").innerText = `${filtered.length} entries`;
-
-            let tot = 0, pTot = 0, oTot = 0;
-            const catTotals = {};
-
-            filtered.forEach(e => {
-                tot += e.amt;
-                if (e.who === 'me') pTot += e.amt;
-                else oTot += e.amt;
-
-                catTotals[e.cat] = (catTotals[e.cat] || 0) + e.amt;
-
-                const cObj = S.cards.find(c => c.id === e.cid);
-                const catObj = CATS.find(c => c.id === e.cat);
-                const div = document.createElement("div");
-                div.className = "card-item-box row";
-                div.innerHTML = `
-                    <div>
-                        <div style="font-weight:600;">${catObj ? catObj.n : e.cat} - ${e.amt.toFixed(2)} AED ${e.settled ? '<span style="color:var(--acc); font-size:0.75rem;">(Settled)</span>' : ''}</div>
-                        <div class="mute" style="font-size:0.8rem;">
-                            ${e.dt} • Spent for: ${e.who} ${e.name ? `(${e.name})` : ''} • Card: ${cObj ? cObj.name : 'Unknown'}
-                        </div>
-                    </div>
-                    <button class="ghost" style="color:#ef4444;" onclick="deleteExp('${e.id}')">Delete</button>
-                `;
-                rList.appendChild(div);
-            });
-
-            if (filtered.length === 0) {
-                rList.innerHTML = `<div class="empty">No expenses found.</div>`;
-            }
-
-            const rCatDiv = document.getElementById("rcat");
-            rCatDiv.innerHTML = "";
-            Object.keys(catTotals).forEach(catId => {
-                const catObj = CATS.find(c => c.id === catId);
-                const catAmt = catTotals[catId];
-                const pct = tot > 0 ? (catAmt / tot * 100).toFixed(0) : 0;
-                
-                const cBox = document.createElement("div");
-                cBox.style.marginBottom = "8px";
-                cBox.innerHTML = `
-                    <div class="row" style="font-size:0.85rem; margin-bottom:2px;">
-                        <span>${catObj ? catObj.n : catId}</span>
-                        <span><strong>${catAmt.toFixed(2)} AED</strong> (${pct}%)</span>
-                    </div>
-                    <div class="bar"><i style="width:${pct}%;"></i></div>
-                `;
-                rCatDiv.appendChild(cBox);
-            });
-
-            document.getElementById("rt").innerText = tot.toFixed(2) + " AED";
-            document.getElementById("rme").innerText = `Personal: ${pTot.toFixed(2)} AED`;
-            document.getElementById("roth").innerText = `For others: ${oTot.toFixed(2)} AED`;
-        }
-
-        window.deleteExp = (id) => {
-            const exp = S.exp.find(e => e.id === id);
-            if (exp && !exp.settled) {
-                const card = S.cards.find(c => c.id === exp.cid);
-                if (card) card.bal += exp.amt;
-            }
-            S.exp = S.exp.filter(e => e.id !== id);
-            saveCloudData();
-            render();
-            toast("Transaction deleted");
-        };
-
-        document.getElementById("qSearch").addEventListener("input", renderReports);
-
-        document.querySelectorAll("nav button").forEach(b => {
-            b.onclick = () => {
-                document.querySelectorAll("nav button").forEach(x => x.classList.remove("on"));
-                document.querySelectorAll(".view").forEach(v => v.classList.remove("on"));
-                b.classList.add("on");
-                document.getElementById(`v-${b.dataset.v}`).classList.add("on");
-                if (b.dataset.v === 'rep') renderReports();
-            };
-        });
-    </script>
-</body>
-</html>
