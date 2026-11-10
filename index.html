@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Expense Tracker Pro</title>
     
     <!-- PWA Manifest & Meta Tags -->
@@ -85,7 +85,7 @@
             background: var(--bg); 
             color: var(--ink); 
             padding: var(--pad-fluid);
-            padding-bottom: calc(84px + env(safe-area-inset-bottom, 16px)); 
+            padding-bottom: calc(90px + env(safe-area-inset-bottom, 20px)); 
             max-width: 1024px; 
             margin-inline: auto; 
             min-height: 100vh; 
@@ -143,13 +143,13 @@
         input, select, textarea { 
             width: 100%; 
             font: inherit; 
-            font-size: clamp(0.85rem, 2.8vw, 0.95rem);
+            font-size: clamp(0.9rem, 2.8vw, 1rem);
             color: var(--ink); 
             background: var(--bg); 
             border: 1px solid var(--line); 
             border-radius: 12px; 
-            padding: 10px 14px; 
-            min-height: 46px;
+            padding: 12px 14px; 
+            min-height: 48px;
             touch-action: manipulation;
         }
         input:focus, select:focus, textarea:focus { outline: 2px solid var(--acc); }
@@ -160,34 +160,16 @@
             cursor: pointer; 
             border: 0; 
             border-radius: 12px; 
-            padding: 10px 16px; 
+            padding: 12px 16px; 
             background: var(--acc); 
             color: var(--on); 
             font-weight: 600; 
-            min-height: 46px;
+            min-height: 48px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             transition: transform 0.15s ease, opacity 0.2s ease;
             touch-action: manipulation;
-        }
-        input:focus, select:focus, textarea:focus { outline: 2px solid var(--acc); }
-        
-        button { 
-            font: inherit; 
-            font-size: clamp(0.85rem, 2.6vw, 0.95rem);
-            cursor: pointer; 
-            border: 0; 
-            border-radius: 12px; 
-            padding: 10px 16px; 
-            background: var(--acc); 
-            color: var(--on); 
-            font-weight: 600; 
-            min-height: 46px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.15s ease, opacity 0.2s ease;
         }
         button:active { transform: scale(0.97); }
         button.ghost { background: transparent; color: var(--mute); border: 1px solid var(--line); padding: 8px 14px; font-size: 0.85rem; min-height: 40px; }
@@ -199,11 +181,11 @@
             background: var(--bg); 
             color: var(--ink); 
             border: 1px solid var(--line); 
-            padding: 8px 14px; 
+            padding: 10px 14px; 
             border-radius: 99px; 
             font-size: clamp(0.78rem, 2.5vw, 0.85rem); 
             cursor: pointer; 
-            min-height: 42px;
+            min-height: 44px;
             flex-grow: 0;
         }
         .chip.on { background: var(--acc); color: var(--on); border-color: var(--acc); font-weight: 600; box-shadow: 0 2px 10px rgba(63, 196, 170, 0.3); }
@@ -220,7 +202,7 @@
             max-width: 1024px; 
             margin: 0 auto; 
             z-index: 100; 
-            padding-bottom: env(safe-area-inset-bottom, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 10px);
             box-shadow: 0 -4px 16px rgba(0,0,0,0.25);
         }
         nav button { 
@@ -232,7 +214,7 @@
             font-weight: 600; 
             border-top: 3px solid transparent; 
             font-size: clamp(0.75rem, 2.6vw, 0.88rem); 
-            min-height: 54px;
+            min-height: 58px;
         }
         nav button.on { color: var(--acc); border-top-color: var(--acc); background: rgba(63, 196, 170, 0.06); }
 
@@ -292,7 +274,7 @@
         .modal-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; max-width: 380px; width: 100%; text-align: center; }
 
         #auth-error { display: none; margin-top: 14px; padding: 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 12px; color: #fca5a5; font-size: 0.85rem; text-align: left; }
-        #toast { position: fixed; left: 50%; bottom: 84px; transform: translate(-50%, 16px); background: var(--ink); color: var(--bg); padding: 10px 20px; border-radius: 99px; opacity: 0; transition: .25s; pointer-events: none; font-size: .88rem; z-index: 1000; font-weight: 500; max-width: 90vw; text-align: center; }
+        #toast { position: fixed; left: 50%; bottom: 94px; transform: translate(-50%, 16px); background: var(--ink); color: var(--bg); padding: 10px 20px; border-radius: 99px; opacity: 0; transition: .25s; pointer-events: none; font-size: .88rem; z-index: 1000; font-weight: 500; max-width: 90vw; text-align: center; }
         #toast.on { opacity: 1; transform: translate(-50%,0); }
 
         @media (min-width: 640px) {
@@ -600,32 +582,25 @@
         window.confirmLogout = () => document.getElementById("logoutModal").classList.add("on");
         window.closeLogoutModal = () => document.getElementById("logoutModal").classList.remove("on");
 
-        window.logoutUser = async () => {
+        window.logoutUser = () => {
             closeLogoutModal();
             const logoutOverlay = document.getElementById("logout-overlay");
             logoutOverlay.classList.add("on");
 
-            // Guaranteed quick exit: force dismiss overlay after max 1.5s
-            const fastTimer = setTimeout(() => {
-                logoutOverlay.classList.remove("on");
-                document.getElementById("logged-in-view").style.display = "none";
-                document.getElementById("logged-out-wrapper").style.display = "block";
-            }, 1500);
+            // Non-blocking background sign out
+            signOut(auth).catch(err => console.error("Signout error:", err));
 
             try {
                 localStorage.clear();
                 sessionStorage.clear();
-                await signOut(auth);
-            } catch (e) {
-                console.error("Logout error:", e);
-            } finally {
-                clearTimeout(fastTimer);
-                setTimeout(() => {
-                    logoutOverlay.classList.remove("on");
-                    document.getElementById("logged-in-view").style.display = "none";
-                    document.getElementById("logged-out-wrapper").style.display = "block";
-                }, 200);
-            }
+            } catch(e) {}
+
+            // Instant 300ms transition to logged-out state
+            setTimeout(() => {
+                logoutOverlay.classList.remove("on");
+                document.getElementById("logged-in-view").style.display = "none";
+                document.getElementById("logged-out-wrapper").style.display = "block";
+            }, 300);
         };
 
         async function loadCloudData(uid) {
