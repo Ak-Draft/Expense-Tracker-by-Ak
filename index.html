@@ -85,8 +85,8 @@
             background: var(--bg); 
             color: var(--ink); 
             padding: var(--pad-fluid);
-            padding-bottom: calc(76px + env(safe-area-inset-bottom, 16px)); 
-            max-width: 768px; 
+            padding-bottom: calc(84px + env(safe-area-inset-bottom, 16px)); 
+            max-width: 1024px; 
             margin-inline: auto; 
             min-height: 100vh; 
             transition: background 0.4s ease, color 0.4s ease;
@@ -150,6 +150,26 @@
             border-radius: 12px; 
             padding: 10px 14px; 
             min-height: 46px;
+            touch-action: manipulation;
+        }
+        input:focus, select:focus, textarea:focus { outline: 2px solid var(--acc); }
+        
+        button { 
+            font: inherit; 
+            font-size: clamp(0.85rem, 2.6vw, 0.95rem);
+            cursor: pointer; 
+            border: 0; 
+            border-radius: 12px; 
+            padding: 10px 16px; 
+            background: var(--acc); 
+            color: var(--on); 
+            font-weight: 600; 
+            min-height: 46px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s ease, opacity 0.2s ease;
+            touch-action: manipulation;
         }
         input:focus, select:focus, textarea:focus { outline: 2px solid var(--acc); }
         
@@ -197,7 +217,7 @@
             display: flex; 
             background: var(--card); 
             border-top: 1px solid var(--line); 
-            max-width: 768px; 
+            max-width: 1024px; 
             margin: 0 auto; 
             z-index: 100; 
             padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -279,6 +299,12 @@
             .two { grid-template-columns: repeat(2, 1fr); }
             nav button { font-size: 0.9rem; }
             .card-item-actions { flex-wrap: nowrap; }
+        }
+
+        @media (min-width: 768px) {
+            body { padding-inline: 24px; }
+            .auth-container { max-width: 520px; }
+            .two { grid-template-columns: repeat(2, 1fr); gap: 14px; }
         }
     </style>
 </head>
@@ -578,12 +604,27 @@
             closeLogoutModal();
             const logoutOverlay = document.getElementById("logout-overlay");
             logoutOverlay.classList.add("on");
+
+            // Guaranteed quick exit: force dismiss overlay after max 1.5s
+            const fastTimer = setTimeout(() => {
+                logoutOverlay.classList.remove("on");
+                document.getElementById("logged-in-view").style.display = "none";
+                document.getElementById("logged-out-wrapper").style.display = "block";
+            }, 1500);
+
             try {
                 localStorage.clear();
                 sessionStorage.clear();
                 await signOut(auth);
             } catch (e) {
-                logoutOverlay.classList.remove("on");
+                console.error("Logout error:", e);
+            } finally {
+                clearTimeout(fastTimer);
+                setTimeout(() => {
+                    logoutOverlay.classList.remove("on");
+                    document.getElementById("logged-in-view").style.display = "none";
+                    document.getElementById("logged-out-wrapper").style.display = "block";
+                }, 200);
             }
         };
 
